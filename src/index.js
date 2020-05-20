@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore, applyMiddleware, compose} from 'redux' // applyMiddleware用来管理中间件
+import thunk from 'redux-thunk'
+import {Provider} from 'react-redux'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {counter} from './index.redux'
+const reduxDevtools = window.devToolsExtension?window.devToolsExtension(): f=>f
+
+const store = createStore(counter, compose(
+  applyMiddleware(thunk), //开启thunk中间件
+  reduxDevtools //通过compose把reduxDevtools工具和state结合
+)) 
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    (<Provider store={store}>
+      <App />
+    </Provider>)
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+// store.subscribe(render)
