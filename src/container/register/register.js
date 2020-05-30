@@ -23,7 +23,7 @@ class Register extends React.Component{
   async handleRegister(){
     await this.props.register(this.state)
     // localStorage.setItem('userType', this.props.)
-    // console.log(this.state)
+    // console.log(this.props.state)
   }
   handleChange(key, val){
     this.setState({

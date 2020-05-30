@@ -2,33 +2,33 @@ import axios from "axios"
 import {getRedirectPath} from '../util'
 // import { Switch } from "react-router-dom"
 
-const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
+const AUTH_SUCCESS = 'AUTH_SUCCESS'
 const ERROE_MSG = 'ERROE_MSG'
 
 const initState = {
   redirectTo: '',
-  isAuth: false,
   msg: '',
   user: '',
   pwd: '',
   type: ''
 }
 
+//根据type处理state
 export function user(state=initState, action){
   switch(action.type){
-    case REGISTER_SUCCESS: 
-      return {...state, msg: '', isAuth: true, redirectTo: getRedirectPath(action.payload), ...action.payload}
+    case AUTH_SUCCESS: 
+      return {...state, msg: '', redirectTo: getRedirectPath(action.payload), ...action.payload}
     case ERROE_MSG:
-      return {...state, isAuth: false, msg: action.msg}
+      return {...state, msg: action.msg}
     default:
       return state
   }
 }
-
-export function registerSuccess(data){
-  return {type:REGISTER_SUCCESS, payload: data}
+//注册/更新信息成功
+export function authSuccess(data){
+  return {type:AUTH_SUCCESS, payload: data}
 }
-
+//注册/更新信息失败
 export function errorMsg(msg){
   return {
     msg,
@@ -36,6 +36,7 @@ export function errorMsg(msg){
   }
 }
 
+//注册
 export function register (data){
   const {user, pwd, type, repeatpwd} = data
   // console.log(user, pwd, type, repeatpwd)
@@ -49,11 +50,43 @@ export function register (data){
     axios.post('/user/register', {user, pwd, type}).then(res=>{
       // console.log(res)
       if(res.status === 200 && res.data.code === 1){
-        dispatch(registerSuccess({user, pwd, type}))
+        dispatch(authSuccess({user, pwd, type}))
         localStorage.setItem('userType', type)
       } else {
         dispatch(errorMsg(res.data.msg))
       }
     })
   }
+}
+// 登陆
+export function login(data){
+  const {user, pwd} =data
+  if(!user || !pwd){
+    console.log('请输入用户名或密码')
+    return errorMsg('请输入用户名或密码')
+  }
+  return dispatch=>{
+    axios.post('/user/bosslogin', {user, pwd}).then(res=>{
+      if(res.status === 200 && res.data.code === 1){
+        dispatch(authSuccess(res.data.data))
+      } else {
+        dispatch(errorMsg(res.data.msg))
+      }
+    })
+  }
+}
+
+//更新信息
+export function update(data){
+  return dispatch=>{
+      axios.post('/user/update', data).then(res=>{
+      // console.log(res)
+      if(res.status === 200 && res.data.code === 1){
+        dispatch(authSuccess(res.data.data))
+      } else {
+        dispatch(errorMsg(res.data.msg))
+      }
+    })
+  }
+
 }

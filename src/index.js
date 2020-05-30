@@ -4,12 +4,14 @@ import { createStore, applyMiddleware, compose} from 'redux' // applyMiddlewareç
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
-import './index.css';
+import './index.css'
 // import * as serviceWorker from './serviceWorker';
 import reducers from './reducer'
 import './config'
 import Login from './container/login/login'
 import Register from './container/register/register'
+import BossInfo from './container/bossInfo/bossInfo'
+import Bosspage from './container/bosspage/bosspage'
 import AuthRoute from './component/authRoute/authRoute'
 const reduxDevtools = window.devToolsExtension?window.devToolsExtension(): f=>f
 
@@ -25,6 +27,8 @@ ReactDOM.render(
         <div>
           <AuthRoute></AuthRoute>
           {/* <Redirect path='/' component={Login}></Redirect> */}
+          <Route path='/bosspage' component={Bosspage}></Route>
+          <Route path='/bossinfo' component={BossInfo}></Route>
           <Route path='/login' component={Login}></Route>
           <Route path='/register' component={Register}></Route>
         </div>

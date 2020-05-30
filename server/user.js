@@ -7,8 +7,12 @@ Router.post('/register', function(req,res){
   return res.json({code: 1})
 })
 
-Router.post('/login', function(req,res){
-  return res.json({code: 1})
+Router.post('/bosslogin', function(req,res){
+  return res.json({code: 1,data:{user:'橘九',type: 'boss'}})
+})
+Router.post('/update', function(req,res){
+  const data = req.body
+  return res.json({code: 1,data})
 })
 
 Router.get('/info', function(req, res){
